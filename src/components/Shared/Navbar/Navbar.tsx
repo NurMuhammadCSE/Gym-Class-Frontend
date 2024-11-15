@@ -2,13 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { getUserInfo, removeUser } from "@/Services/authServices";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Fetch user info (you may replace this with a better authentication mechanism if available)
+  const userInfo = getUserInfo();
+  const router = useRouter();
+
+  // Handler for logout
+  const handleLogout = () => {
+    // localStorage.removeItem("authToken"); // Adjust this based on how your token is stored
+    // window.location.href = "/login"; // Redirect to login page
+    removeUser();
+    router.refresh();
+  };
+
   return (
     <nav className="bg-[#133E87] text-white">
       <div className="container mx-auto flex justify-between items-center px-4 py-3">
+        {/* Logo */}
         <Link href="/" className="text-2xl font-bold">
           Gym Scheduler
         </Link>
@@ -30,7 +45,11 @@ const Navbar = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                d={
+                  isMenuOpen
+                    ? "M6 18L18 6M6 6l12 12"
+                    : "M4 6h16M4 12h16M4 18h16"
+                }
               />
             </svg>
           </button>
@@ -57,19 +76,37 @@ const Navbar = () => {
               About Us
             </Link>
           </li>
-          <li>
-            <Link href="/contact" className="block px-4 py-2 lg:inline lg:py-0">
-              Contact
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/login"
-              className="block px-4 py-2 lg:inline lg:py-0 lg:bg-white lg:text-[#133E87] lg:rounded lg:px-4 lg:font-semibold"
-            >
-              Login
-            </Link>
-          </li>
+
+          {/* Conditional Rendering: Dashboard & Logout */}
+          {userInfo?.id ? (
+            <>
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="block px-4 py-2 lg:inline lg:py-0"
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="block px-4 py-2 lg:inline lg:py-0 lg:bg-white lg:text-[#133E87] lg:rounded lg:px-4 lg:font-semibold"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link
+                href="/login"
+                className="block px-4 py-2 lg:inline lg:py-0 lg:bg-white lg:text-[#133E87] lg:rounded lg:px-4 lg:font-semibold"
+              >
+                Login
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

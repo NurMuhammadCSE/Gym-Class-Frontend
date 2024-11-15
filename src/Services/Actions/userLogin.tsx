@@ -6,7 +6,7 @@ export const userLogin = async (data:FieldValues) => {
     console.log(data)
     // console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL)
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/login`,
     {
       method: "POST",
       headers: {
